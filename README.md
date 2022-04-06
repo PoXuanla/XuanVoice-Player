@@ -9,3 +9,5 @@
   - /Web    #一般模式下的Player
   
   - MusicPlayer.js 主體
+### 使用套件
+1. mui v5.5.3
