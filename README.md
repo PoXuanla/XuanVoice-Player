@@ -2,12 +2,13 @@
 ### 結構
 #### src/components/MusicPlayer
 
-  - /Dialog #FullScreen下的Player
+  - /Dialog __FullScreen下的Player__
   
-  - /Utils  #MusicPlayer的共用組件 
+  - /Utils  __MusicPlayer的共用組件__ 
   
-  - /Web    #一般模式下的Player
+  - /Web    __一般模式下的Player__
   
   - MusicPlayer.js 主體
+---------------------------------------
 ### 使用套件
 1. mui v5.5.3
