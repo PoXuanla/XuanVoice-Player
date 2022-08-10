@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/XuanVoice-Player/static/css/main.9b4b0dc5.css",
+    "main.js": "/XuanVoice-Player/static/js/main.7cbc8648.js",
+    "static/js/787.68bbb5b0.chunk.js": "/XuanVoice-Player/static/js/787.68bbb5b0.chunk.js",
+    "index.html": "/XuanVoice-Player/index.html",
+    "main.9b4b0dc5.css.map": "/XuanVoice-Player/static/css/main.9b4b0dc5.css.map",
+    "main.7cbc8648.js.map": "/XuanVoice-Player/static/js/main.7cbc8648.js.map",
+    "787.68bbb5b0.chunk.js.map": "/XuanVoice-Player/static/js/787.68bbb5b0.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.9b4b0dc5.css",
+    "static/js/main.7cbc8648.js"
+  ]
+}
