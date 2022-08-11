@@ -1,113 +1,116 @@
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import { blueGrey, pink } from "@mui/material/colors";
-import { useEffect, useRef, useState } from "react";
+import Box from '@mui/material/Box'
+import Typography from '@mui/material/Typography'
+import { blueGrey, pink } from '@mui/material/colors'
+import { useEffect, useRef, useState } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+import { setSongCurrentTime } from '../../../features/musicplayer/musicplayerSlice'
 const PlayerProgressBar = (props) => {
-  const player = props.player;
-  const isPlay = props.isPlay;
-  const duration = props.duration;
-  const { position, top, left, bottom, padding, bgcolor, color } = props.css || {};
-
-  const showTime = props.showTime; //是否顯示 current Time & duration Time
-  const [currentTime, setCurrentTime] = useState(0);
-  const [durationToMin, setDurationToMin] = useState(""); //convert Duration to 00:00 format
-  const [currentTimeToMin, setCurrentTimeToMin] = useState(0); //convert currentTime to 00:00 format
-  const [progressPercentage, setProgressPercentage] = useState("0%");
-  const [flag, setFlag] = useState(false);
-  const progressBarRef = useRef(null);
-
+  //props
+  const player = props.player
+  const { position, top, left, bottom, padding, bgcolor, color } = props.css || {}
+  const showTime = props.showTime //是否顯示 current Time & duration Time
+  //useState
+  const [durationToMin, setDurationToMin] = useState('') //convert Duration to 00:00 format
+  const [currentTimeToMin, setCurrentTimeToMin] = useState(0) //convert currentTime to 00:00 format
+  const [progressPercentage, setProgressPercentage] = useState('0%')
+  const [flag, setFlag] = useState(false)
+  //useRef
+  const progressBarRef = useRef(null)
+  //redux
+  const { isPlay, songDuration, songCurrentTime } = useSelector((state) => state.musicplayer)
+  const dispatch = useDispatch()
+  
   //listenning currentTime when audio played
   useEffect(() => {
-    let timer = null;
+    let timer = null
     if (isPlay) {
       timer = setInterval(() => {
-        setCurrentTime(player.currentTime);
-      }, 250);
+        dispatch(setSongCurrentTime(player.currentTime))
+      }, 250)
     }
     return () => {
-      console.log("clear");
-      clearInterval(timer);
-    };
-  }, [isPlay]);
+      clearInterval(timer)
+    }
+  }, [isPlay])
   //get music progress percentage
   useEffect(() => {
-    let percentage = (Math.floor(currentTime) / Math.floor(duration)) * 100;
-    if (percentage > 99) percentage = 100; //因為currentTime 跟 duration 會有誤差達不到100%，所以使用非常手段!
-    setProgressPercentage(`${percentage}%`);
-  }, [currentTime]);
+    let percentage = (Math.floor(songCurrentTime) / Math.floor(songDuration)) * 100
+    if (percentage > 99) percentage = 100 //因為currentTime 跟 duration 會有誤差達不到100%，所以使用非常手段!
+    setProgressPercentage(`${percentage}%`)
+  }, [songCurrentTime])
 
   //convert duration to 00:00 format
   useEffect(() => {
-    let time = convertTimeFormat(duration);
-    setDurationToMin(time);
-  }, [duration]);
+    let time = convertTimeFormat(songDuration)
+    setDurationToMin(time)
+  }, [songDuration])
 
   //convert currentTime to 00:00 format
   useEffect(() => {
-    let time = convertTimeFormat(currentTime);
-    setCurrentTimeToMin(time);
-  }, [currentTime]);
+    let time = convertTimeFormat(songCurrentTime)
+    setCurrentTimeToMin(time)
+  }, [songCurrentTime])
 
   const convertTimeFormat = (seconds) => {
-    let time = Math.floor(seconds);
-    let min = Math.floor(time / 60);
-    let sec = time - min * 60;
+    let time = Math.floor(seconds)
+    let min = Math.floor(time / 60)
+    let sec = time - min * 60
     //個位數補零
-    if (min < 10) min = `0${min}`;
-    if (sec < 10) sec = `0${sec}`;
-    return `${min} : ${sec}`;
-  };
+    if (min < 10) min = `0${min}`
+    if (sec < 10) sec = `0${sec}`
+    return `${min} : ${sec}`
+  }
   const progressMouseDown = (event) => {
-    setFlag(true);
-    let clientWidth = progressBarRef.current.clientWidth; //元件總長
-    let clickOffsetX = event.nativeEvent.offsetX; //從元件起點到點擊位置的長度
-    let newProgressPercentage = (clickOffsetX / clientWidth) * 100;
-    player.currentTime = duration * (newProgressPercentage / 100);
-    setCurrentTime(duration * (newProgressPercentage / 100));
-    setProgressPercentage(`${newProgressPercentage}%`);
-  };
+    setFlag(true)
+    let clientWidth = progressBarRef.current.clientWidth //元件總長
+    let clickOffsetX = event.nativeEvent.offsetX //從元件起點到點擊位置的長度
+    let newProgressPercentage = (clickOffsetX / clientWidth) * 100
+    player.currentTime = songDuration * (newProgressPercentage / 100)
+    dispatch(setSongCurrentTime(songDuration * (newProgressPercentage / 100)))
+    setProgressPercentage(`${newProgressPercentage}%`)
+  }
   const progressMouseMove = (event) => {
     if (flag) {
-      let clientWidth = progressBarRef.current.clientWidth; //元件總長
-      let clickOffsetX = event.nativeEvent.offsetX; //從元件起點到點擊位置的長度
-      let newProgressPercentage = (clickOffsetX / clientWidth) * 100;
-      player.currentTime = duration * (newProgressPercentage / 100);
-      setCurrentTime(duration * (newProgressPercentage / 100));
-      setProgressPercentage(`${newProgressPercentage}%`);
+      let clientWidth = progressBarRef.current.clientWidth //元件總長
+      let clickOffsetX = event.nativeEvent.offsetX //從元件起點到點擊位置的長度
+      let newProgressPercentage = (clickOffsetX / clientWidth) * 100
+      player.currentTime = songDuration * (newProgressPercentage / 100)
+      dispatch(setSongCurrentTime(songDuration * (newProgressPercentage / 100)))
+      setProgressPercentage(`${newProgressPercentage}%`)
     }
-  };
+  }
   const progressMouseUp = (event) => {
-    setFlag(false);
-  };
+    setFlag(false)
+  }
 
   return (
     <Box
       sx={{
-        width: "100%",
-        position: position || "static",
+        width: '100%',
+        position: position || 'static',
         top: top !== undefined ? top : null,
         bottom: bottom !== undefined ? bottom : null,
         left: left !== undefined ? left : null,
         padding: padding || 0,
         zIndex: 1,
-        bgcolor: bgcolor || "",
-        cursor: "pointer",
+        bgcolor: bgcolor || '',
+        cursor: 'pointer'
       }}
     >
       {/* CurrentTime & DurationTime */}
       {showTime && (
         <Box
           sx={{
-            display: "flex",
-            width: "100%",
-            justifyContent: "space-between",
-            marginBottom: "6px",
+            display: 'flex',
+            width: '100%',
+            justifyContent: 'space-between',
+            marginBottom: '6px'
           }}
         >
-          <Typography variant="body2" fontSize={10} color={color || "#000"}>
+          <Typography variant='body2' fontSize={10} color={color || '#000'}>
             {currentTimeToMin}
           </Typography>
-          <Typography variant="body2" fontSize={10} color={color || "#000"}>
+          <Typography variant='body2' fontSize={10} color={color || '#000'}>
             {durationToMin}
           </Typography>
         </Box>
@@ -121,22 +124,22 @@ const PlayerProgressBar = (props) => {
         onMouseMove={progressMouseMove}
         onMouseUp={progressMouseUp}
         sx={{
-          display: "block",
-          position: "relative",
-          borderRadius: "10px",
-          width: "100%",
+          display: 'block',
+          position: 'relative',
+          borderRadius: '10px',
+          width: '100%',
           height: 4,
-          bgcolor: blueGrey[100],
-          overflow: "hidden",
+          bgcolor: pink[900],
+          overflow: 'hidden'
         }}
       >
         {/* 播放進度條 */}
         <Box
           sx={{
-            position: "absolute",
+            position: 'absolute',
             width: progressPercentage,
             height: 4,
-            bgcolor: pink[400],
+            bgcolor: pink[100]
           }}
         ></Box>
         {/* 播放圓形拖曳鈕 */}
@@ -156,6 +159,6 @@ const PlayerProgressBar = (props) => {
         ></Box> */}
       </Box>
     </Box>
-  );
-};
-export default PlayerProgressBar;
+  )
+}
+export default PlayerProgressBar

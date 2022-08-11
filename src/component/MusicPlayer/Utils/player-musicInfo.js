@@ -1,60 +1,63 @@
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import IconButton from "@mui/material/IconButton";
-import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import { blueGrey, pink } from "@mui/material/colors";
+import Box from '@mui/material/Box'
+import Typography from '@mui/material/Typography'
+import IconButton from '@mui/material/IconButton'
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz'
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder'
+import { blueGrey, pink } from '@mui/material/colors'
+import { useSelector } from 'react-redux'
+
 const MusicInfo = (props) => {
   const {
-    display = "block",
-    position = "static",
-    width = "100%",
+    display = 'block',
+    position = 'static',
+    width = '100%',
     bottom = 0,
     padding = 0,
     marginRight = 0,
-    color = "#000",
-  } = props.css || {};
-  const showBtn = props.showBtn;
+    color = '#000'
+  } = props.css || {}
+  const showBtn = props.showBtn
+  const { songListData, currentSongIndex } = useSelector((state) => state.musicplayer)
   return (
     <Box
       sx={{
-        display: display || "block",
-        position: position || "static",
+        display: display || 'block',
+        position: position || 'static',
         bottom: bottom !== undefined ? bottom : null,
         padding: padding || 0,
-        width: width || "100%",
-        textOverflow: "ellipsis",
+        width: width || '100%',
+        textOverflow: 'ellipsis',
         marginRight: marginRight || 0,
-        transition: "all .5s",
+        transition: 'all .5s'
       }}
     >
       {/* 作者歌名 */}
       <Box
         sx={{
-          width: showBtn ? "calc(100% - 70px)" : "100%",
+          width: showBtn ? 'calc(100% - 70px)' : '100%'
         }}
       >
-        <Typography noWrap variant={showBtn ? "h5" : "h6"} color={color}>
-          還是要有長頸鹿才能
+        <Typography noWrap variant={showBtn ? 'h5' : 'h6'} color={color}>
+          {songListData.length === 0 ? '' : songListData[currentSongIndex].songTitle}
         </Typography>
 
-        <Typography variant="body2" fontSize={10} color={color}>
-          沒有才能
+        <Typography variant='body2' fontSize={10} color={color}>
+          {songListData.length === 0 ? '' : songListData[currentSongIndex].author}
         </Typography>
       </Box>
       {/* 更多功能、喜歡 */}
       <Box
         sx={{
-          display: showBtn ? "flex" : "none",
-          justifyContent: "right",
-          alignItems: "center",
-          width: 70,
+          display: showBtn ? 'flex' : 'none',
+          justifyContent: 'right',
+          alignItems: 'center',
+          width: 70
         }}
       >
         <IconButton
           sx={{
             width: 30,
-            height: 30,
+            height: 30
           }}
         >
           <MoreHorizIcon sx={{ color }}></MoreHorizIcon>
@@ -62,10 +65,10 @@ const MusicInfo = (props) => {
         <IconButton
           sx={{
             width: 30,
-            height: 30,
+            height: 30
           }}
         >
-          <FavoriteBorderIcon sx={{ color, "&:hover": { color: pink[500] } }}></FavoriteBorderIcon>
+          <FavoriteBorderIcon sx={{ color, '&:hover': { color: pink[500] } }}></FavoriteBorderIcon>
         </IconButton>
       </Box>
     </Box>
@@ -124,6 +127,6 @@ const MusicInfo = (props) => {
     //     </IconButton>
     //   </Box>
     // </Box>
-  );
-};
-export default MusicInfo;
+  )
+}
+export default MusicInfo
